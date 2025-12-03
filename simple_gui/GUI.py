@@ -14,6 +14,7 @@ from tkinter import font
 from tkinter import ttk
 from chat_utils import *
 import json
+import matplotlib
 
 # GUI class for the chat
 class GUI:
