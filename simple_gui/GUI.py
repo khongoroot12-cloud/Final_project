@@ -200,9 +200,9 @@ class GUI:
         self.entryMsg.delete(0, END)
 
     def proc(self):
-    while True:
-        read, write, error = select.select([self.socket], [], [], 0)
-        peer_msg = ""
+        while True:
+            read, write, error = select.select([self.socket], [], [], 0)
+            peer_msg = ""
 
         # receive message from peer
         if self.socket in read:
