@@ -147,7 +147,7 @@ class GUI:
         self.textCons = Text(self.Window,
                              width = 20, 
                              height = 2,
-                             bg = "#17202A",
+                             bg = "#B05EA8",
                              fg = "#EAECEE",
                              font = "Helvetica 14", 
                              padx = 5,
@@ -185,6 +185,14 @@ class GUI:
                                 width = 20,
                                 bg = "#ABB2B9",
                                 command = lambda : self.sendButton(self.entryMsg.get()))
+        self.emojiButton = Button(self.bottomFrame,
+                                text="😊",
+                                font=("Segoe UI Emoji", 14),
+                                command=self.open_emoji_picker)
+        self.emojiButton.pack(side=RIGHT, padx=5)
+
+        
+
           
         self.buttonMsg.place(relx = 0.77,
                              rely = 0.008,
@@ -204,6 +212,32 @@ class GUI:
         scrollbar.config(command = self.textCons.yview)
           
         self.textCons.config(state = DISABLED)
+    def open_emoji_picker(self):
+        picker = Toplevel(self.window)
+        picker.title("Emoji Picker")
+        picker.geometry("300x200")
+        picker.resizable(False, False)
+
+        emojis = ["😊", "😂", "🤣", "❤️", "💕", "🥺",
+                    "👍", "😎", "😭", "😡", "😱", "🤔",
+                    "🎉", "🔥", "💀", "✨", "🤯", "👀" ]
+
+
+        row = 0
+        col = 0
+        for emoji in emojis:
+            b = Button(picker, text=emoji, font=("Segoe UI Emoji", 18),
+                        command=lambda e=emoji: (self.insert_emoji(e), picker.destroy()))
+            b.grid(row=row, column=col, padx=5, pady=5)
+
+            col += 1
+            if col > 5:   
+                col = 0
+                row += 1
+    def insert_emoji(self, emoji):
+        self.entryMsg.insert(END, emoji)
+
+
   
     # function to basically start the thread for sending messages
     def sendButton(self, msg):
@@ -211,6 +245,7 @@ class GUI:
         self.my_msg = msg
         # print(msg)
         self.entryMsg.delete(0, END)
+
 
     def proc(self):
         while True:
