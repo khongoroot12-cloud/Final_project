@@ -82,26 +82,39 @@ class GUI:
         self.Window.mainloop()
   
     def goAhead(self, name):
-        if len(name) > 0:
-            msg = json.dumps({"action":"login", "name": name})
-            self.send(msg)
-            response = json.loads(self.recv())
-            if response["status"] == 'ok':
-                self.login.destroy()
-                self.sm.set_state(S_LOGGEDIN)
-                self.sm.set_myname(name)
-                self.layout(name)
-                self.textCons.config(state = NORMAL)
-                # self.textCons.insert(END, "hello" +"\n\n")   
-                self.textCons.insert(END, menu +"\n\n")      
-                self.textCons.config(state = DISABLED)
-                self.textCons.see(END)
-                # while True:
-                #     self.proc()
-        # the thread to receive messages
+        def goAhead(self, name):
+    if len(name) > 0:
+        msg = json.dumps({"action": "login", "name": name})
+        self.send(msg)
+        response = json.loads(self.recv())
+
+        #Login success
+        if response["status"] == 'ok':
+            
+            self.login.destroy()
+            self.sm.set_state(S_LOGGEDIN)
+            self.sm.set_myname(name)
+            self.layout(name)
+
+           
+            self.textCons.config(state=NORMAL)
+            self.textCons.insert(END, "✅ Welcome to the chat, " + name + "!\n\n")
+            self.textCons.insert(END, menu + "\n\n")
+            self.textCons.config(state=DISABLED)
+            self.textCons.see(END)
+
+            
             process = threading.Thread(target=self.proc)
             process.daemon = True
             process.start()
+
+        #Login failed
+        else:
+            # Show a popup window
+            from tkinter import messagebox
+            messagebox.showerror("Login failed", "❌ Username already taken or invalid.\nPlease try again.")
+
+        
   
     # The main layout of the chat
     def layout(self,name):
