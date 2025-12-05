@@ -82,11 +82,10 @@ class GUI:
         self.Window.mainloop()
   
     def goAhead(self, name):
-        def goAhead(self, name):
-    if len(name) > 0:
-        msg = json.dumps({"action": "login", "name": name})
-        self.send(msg)
-        response = json.loads(self.recv())
+        if len(name) > 0:
+            msg = json.dumps({"action": "login", "name": name})
+            self.send(msg)
+            response = json.loads(self.recv())
 
         #Login success
         if response["status"] == 'ok':
