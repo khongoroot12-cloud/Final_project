@@ -200,21 +200,27 @@ class GUI:
         self.entryMsg.delete(0, END)
 
     def proc(self):
-        # print(self.msg)
-        while True:
-            read, write, error = select.select([self.socket], [], [], 0)
-            peer_msg = []
-            # print(self.msg)
-            if self.socket in read:
-                peer_msg = self.recv()
-            if len(self.my_msg) > 0 or len(peer_msg) > 0:
-                # print(self.system_msg)
-                self.system_msg += self.sm.proc(self.my_msg, peer_msg)
-                self.my_msg = ""
-                self.textCons.config(state = NORMAL)
-                self.textCons.insert(END, self.system_msg +"\n\n")      
-                self.textCons.config(state = DISABLED)
-                self.textCons.see(END)
+    while True:
+        read, write, error = select.select([self.socket], [], [], 0)
+        peer_msg = ""
+
+        # receive message from peer
+        if self.socket in read:
+            peer_msg = self.recv()
+
+        # if user typed a message or received a message
+        if len(self.my_msg) > 0 or len(peer_msg) > 0:
+            new_msg = self.sm.proc(self.my_msg, peer_msg)
+            self.my_msg = ""  # clear the outgoing message buffer
+
+            self.textCons.config(state=NORMAL)
+            self.textCons.insert(END, new_msg + "\n\n")  # print only new msg
+            self.textCons.config(state=DISABLED)
+            self.textCons.see(END)
+
+            # IMPORTANT FIX: reset system_msg
+            self.system_msg = ""
+
 
     def run(self):
         self.login()
